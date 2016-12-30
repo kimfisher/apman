@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('APMAN_SECRET_KEY')
 DEBUG = os.getenv('APMAN_DEBUG')
 USE_S3 = os.getenv('APMAN_USE_S3')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('APMAN_ALLOWED_HOSTS').split(',')
 
 # Application definition
 
