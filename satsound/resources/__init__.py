@@ -1,0 +1,1 @@
+from satellitetrajectories import FlatSatelliteTrajectoryViewset
