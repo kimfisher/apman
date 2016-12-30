@@ -1,2 +1,2 @@
 # apman
-Sonice Planetarium satellite management
+Sonic Planetarium satellite management
