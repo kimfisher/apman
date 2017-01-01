@@ -22,8 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('APMAN_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('APMAN_DEBUG')
-USE_S3 = os.getenv('APMAN_USE_S3')
+DEBUG = os.getenv('APMAN_DEBUG', False)
+USE_S3 = os.getenv('APMAN_USE_S3', True)
+SESSION_COOKIE_SECURE = os.getenv('APMAN_SESSION_COOKIE_SECURE', True)
+CSRF_COOKIE_SECURE = os.getenv('APMAN_CSRF_COOKIE_SECURE', True)
 
 ALLOWED_HOSTS = os.getenv('APMAN_ALLOWED_HOSTS').split(',')
 
@@ -123,7 +125,7 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'audio')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'audio/')
 MEDIA_URL = '/audio/'
 
 AWS_ACCESS_KEY_ID = os.getenv('APMAN_AWS_ACCESS_KEY_ID')
