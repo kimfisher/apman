@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.urls import reverse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,8 +27,8 @@ DEBUG = os.getenv('APMAN_DEBUG', False)
 USE_S3 = os.getenv('APMAN_USE_S3', True)
 SESSION_COOKIE_SECURE = os.getenv('APMAN_SESSION_COOKIE_SECURE', True)
 CSRF_COOKIE_SECURE = os.getenv('APMAN_CSRF_COOKIE_SECURE', True)
-
 ALLOWED_HOSTS = os.getenv('APMAN_ALLOWED_HOSTS').split(',')
+ADMINS = [('Sonic Planetarium Support', os.getenv('APMAN_EMAIL_HOST_USER')), ]
 
 # Application definition
 
@@ -172,3 +173,15 @@ MAX_AUDIOFILE_SIZE = 10 * 1024 * 1024  # 10 mb
 
 MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio timestamps to trajectory rise times
 TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+# Email configuration.
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv('APMAN_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('APMAN_EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.getenv('APMAN_EMAIL_HOST_USER')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+LOGIN_URL = 'admin:login'
