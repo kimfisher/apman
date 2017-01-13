@@ -177,7 +177,7 @@ class SatelliteTrajectory(BaseModel):
 
 class SatelliteAudio(BaseModel):
     satellite = models.ForeignKey(Satellite)
-    user = models.ForeignKey(User, blank=True, null=True)
+    user = models.ForeignKey(User)
     attribution = models.CharField(max_length=100, blank=True)
     # if we decide we need to override filename with this pk:
     # http://stackoverflow.com/questions/651949/django-access-primary-key-in-models-filefieldupload-to-location
