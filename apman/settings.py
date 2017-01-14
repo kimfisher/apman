@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from django.urls import reverse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -169,7 +168,7 @@ AUDIO_TYPES = (
     'audio/webm',  # .webm
     'audio/x-aiff',  # .aif .aifc .aiff
 )
-MAX_AUDIOFILE_SIZE = 10 * 1024 * 1024  # 10 mb
+MAX_AUDIOFILE_SIZE = 30 * 1024 * 1024  # mb
 
 MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio timestamps to trajectory rise times
 TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
