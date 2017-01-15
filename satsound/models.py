@@ -79,7 +79,8 @@ class Satellite(BaseModel):
             while o.date < date_limit:
                 try:
                     traj = o.next_pass(s)
-                    print(o.next_pass(s))
+                    if settings.DEBUG:
+                        print(o.next_pass(s))
 
                     st = SatelliteTrajectory()
                     st.satellite = self

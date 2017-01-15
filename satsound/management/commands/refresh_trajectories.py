@@ -1,6 +1,10 @@
+import logging
+
 from django.core.management.base import BaseCommand
 
 from satsound.models import *
+
+logger = logging.getLogger('commands')  # __name__
 
 
 class Command(BaseCommand):
@@ -20,10 +24,12 @@ class Command(BaseCommand):
         st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
         ids = [s.pk for s in Satellite.objects.all()]
         bincount = self._get_bincount(ids, kwargs['bin'])
+        logger.info('refresh_trajectories triggered')
 
         for i in range(0, bincount):
             query_ids = ids[i * kwargs['bin']: (i + 1) * kwargs['bin']]
-            self.stdout.write(str(query_ids))
+            logger.info('bin %s ids: %s' % (i, str(query_ids)))
+            # self.stdout.write(str(query_ids))
             tles = st.tle_latest(iter_lines=True, ordinal=1, norad_cat_id=query_ids, format='tle')
 
             tle = None
@@ -39,7 +45,7 @@ class Command(BaseCommand):
                         s.save()
                         s.update_trajectories()
                     except Satellite.DoesNotExist:
-                        # TODO: log this
-                        self.stdout.write('%s does not exist' % norad_id)
+                        logger.error('%s does not exist' % norad_id)
+                        # self.stdout.write('%s does not exist' % norad_id)
 
                     tle = None
