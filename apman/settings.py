@@ -29,6 +29,11 @@ CSRF_COOKIE_SECURE = os.getenv('APMAN_CSRF_COOKIE_SECURE', True)
 ALLOWED_HOSTS = os.getenv('APMAN_ALLOWED_HOSTS').split(',')
 ADMINS = [('Sonic Planetarium Support', os.getenv('APMAN_EMAIL_HOST_USER')), ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,10 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_extensions',
     'rest_framework',
     'storages',
     'django_cleanup',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -111,14 +121,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -183,4 +191,8 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.getenv('APMAN_EMAIL_HOST_USER')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-LOGIN_URL = 'admin:login'
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # mandatory, none
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
