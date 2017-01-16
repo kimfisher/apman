@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import logging
 import math
 import unicodedata
 from os import path
@@ -11,6 +12,8 @@ from django.utils import timezone
 from spacetrack import SpaceTrackClient
 
 from .validators import *
+
+logger = logging.getLogger('commands')
 
 
 def decdeg2dms(dd):
@@ -76,24 +79,44 @@ class Satellite(BaseModel):
 
             o.date = o.epoch = ephem.now()
             date_limit = ephem.Date(o.date + observer.trajectory_window * ephem.hour)
+            traj = []
             while o.date < date_limit:
                 try:
-                    traj = o.next_pass(s)
-                    if settings.DEBUG:
-                        print(o.next_pass(s))
+                    np = o.next_pass(s)
+                    logger.info('%s next pass: %s' % (self.pk, np))
+                    try:
+                        assert np[0] < np[2] < np[4]
 
-                    st = SatelliteTrajectory()
-                    st.satellite = self
-                    st.observer = observer
-                    st.rise_time = timezone.make_aware(traj[0].datetime(), timezone.utc)
-                    st.rise_azimuth = math.degrees(traj[1])
-                    st.maxalt_time = timezone.make_aware(traj[2].datetime(), timezone.utc)
-                    st.maxalt_altitude = math.degrees(traj[3])
-                    st.set_time = timezone.make_aware(traj[4].datetime(), timezone.utc)
-                    st.set_azimuth = math.degrees(traj[5])
+                        try:
+                            assert traj != np
 
-                    st.save()
-                    o.date = o.epoch = traj[4]
+                            st = SatelliteTrajectory()
+                            st.satellite = self
+                            st.observer = observer
+                            st.rise_time = timezone.make_aware(np[0].datetime(), timezone.utc)
+                            st.rise_azimuth = math.degrees(np[1])
+                            st.maxalt_time = timezone.make_aware(np[2].datetime(), timezone.utc)
+                            st.maxalt_altitude = math.degrees(np[3])
+                            st.set_time = timezone.make_aware(np[4].datetime(), timezone.utc)
+                            st.set_azimuth = math.degrees(np[5])
+
+                            st.save()
+                            o.date = o.epoch = np[4]
+                            traj = np
+
+                        except AssertionError:  # If we get trapped in a loop, bail
+                            logger.error('Repeated trajectory. Discarding %s and bailing.' % (np,))
+                            o.date = o.epoch = date_limit
+
+                    except AssertionError:
+                        logger.error('Pass times out of order. Discarding %s' % (np,))
+                        # If the traj times are out of order, use the latest datetime to move forward.
+                        # What appears to cause this is max_alt_time and/or set_time being None,
+                        # so that previous np[2] and np[4] aren't overwritten.
+                        # http://rhodesmill.org/pyephem/quick.html under transit, rising, setting:
+                        # "Any of the tuple values can be None if that event was not found."
+                        o.date = o.epoch = max(np[0], np[2], np[4])
+
                 except ValueError:
                     o.date = o.epoch = date_limit
                     # TODO: handle geosynchronous satellites (no trajectories calculated)
