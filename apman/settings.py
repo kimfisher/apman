@@ -163,23 +163,21 @@ SPACETRACK_PASSWORD = os.getenv('APMAN_SPACETRACK_PASSWORD')
 AUDIO_TYPES = (
     'audio/aac',  # .aac
     'audio/basic',  # .au .snd
-    'audio/mid',  # .mid .rmi
     'audio/mpeg',  # .mp1 .mp2 .mp3 .mpg .mpeg
     'audio/mp4',  # .mp4 .m4a
-    'audio/ogg',  # .oga .ogg
-    'audio/vorbis',  # .ogg
     'audio/vnd.wav',  # .wav
     'audio/wav',  # .wav
     'audio/wave',  # .wav
     'audio/x-wav',  # .wav
     'audio/x-pn-wav',  # .wav
-    'audio/webm',  # .webm
     'audio/x-aiff',  # .aif .aifc .aiff
+    'audio/flac',
 )
 MAX_AUDIOFILE_SIZE = 30 * 1024 * 1024  # mb
 
 MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio timestamps to trajectory rise times
 TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+DEFAULT_TIMEZONE = 'Europe/London'
 
 # Email configuration.
 

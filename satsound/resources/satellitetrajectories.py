@@ -2,6 +2,7 @@ import datetime
 from random import randint
 
 import django_filters
+import pytz
 from rest_framework import serializers, viewsets
 
 from ..models import *
@@ -41,14 +42,21 @@ class FlatSatelliteTrajectorySerializer(serializers.ModelSerializer):
     def get_name(self, obj):
         return obj.satellite.name
 
+    def _get_localtime(self, obj, time):
+        tz = pytz.timezone(obj.observer.timezone)
+        return time.astimezone(tz)
+
     def get_rise_time(self, obj):
-        return obj.rise_time.strftime(settings.TRAJECTORY_TIME_FORMAT)
+        observer_rise_time = self._get_localtime(obj, obj.rise_time)
+        return observer_rise_time.strftime(settings.TRAJECTORY_TIME_FORMAT)
 
     def get_maxalt_time(self, obj):
-        return obj.maxalt_time.strftime(settings.TRAJECTORY_TIME_FORMAT)
+        observer_maxalt_time = self._get_localtime(obj, obj.maxalt_time)
+        return observer_maxalt_time.strftime(settings.TRAJECTORY_TIME_FORMAT)
 
     def get_set_time(self, obj):
-        return obj.set_time.strftime(settings.TRAJECTORY_TIME_FORMAT)
+        observer_set_time = self._get_localtime(obj, obj.set_time)
+        return observer_set_time.strftime(settings.TRAJECTORY_TIME_FORMAT)
 
     def get_audiofile(self, obj):
         ret = None

@@ -12,3 +12,5 @@ boto3==1.4.3
 django-storages==1.5.1
 django-cleanup==0.4.2
 uWSGI==2.0.14
+timezonefinder==1.5.7
+pytz==2016.10
