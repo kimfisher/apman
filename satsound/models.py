@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from spacetrack import SpaceTrackClient
+from timezonefinder import TimezoneFinder
 
 from .validators import *
 
@@ -141,10 +142,28 @@ class Observer(BaseModel):
     # if we use postgres, we can use geodjango to store lat/lon as a Point
     lat = models.DecimalField(decimal_places=6, max_digits=9, verbose_name=u'latitude')
     lon = models.DecimalField(decimal_places=6, max_digits=9, verbose_name=u'longitude')
+    timezone = models.CharField(max_length=100, default=settings.DEFAULT_TIMEZONE)
     elevation = models.IntegerField(default=0, verbose_name='elevation in meters')
     ip = models.CharField(max_length=40, default='127.0.0.1:54321')  # not currently used
     trajectory_window = models.PositiveSmallIntegerField(verbose_name='hours of trajectories', default=24)
     active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        try:
+            # https://github.com/MrMinimal64/timezonefinder
+            tf = TimezoneFinder()
+            timezone_name = tf.timezone_at(lng=self.lon, lat=self.lat)
+            if timezone_name is None:
+                timezone_name = tf.closest_timezone_at(lng=self.lon, lat=self.lat)
+                # maybe even increase the search radius (delta_degree=x) when it is still None
+
+            self.timezone = timezone_name
+
+        except ValueError:
+            # the coordinates were out of bounds - just use default
+            pass
+
+        super(Observer, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.user.username
