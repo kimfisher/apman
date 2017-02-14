@@ -19,8 +19,14 @@ class SatelliteAdmin(admin.ModelAdmin):
         SatelliteAudioInline,
     ]
 
-
 admin.site.register(Satellite, SatelliteAdmin)
+
 admin.site.register(SatelliteTrajectory)
 admin.site.register(SatelliteAudio)
-admin.site.register(Observer)
+
+
+class ObserverAdmin(admin.ModelAdmin):
+    readonly_fields = ('timezone',)
+
+
+admin.site.register(Observer, ObserverAdmin)
