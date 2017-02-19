@@ -1,1 +1,2 @@
+from satelliteinfo import SatCatViewSet
 from satellitetrajectories import FlatSatelliteTrajectoryViewset

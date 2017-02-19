@@ -6,6 +6,11 @@ from .views import *
 
 router = routers.DefaultRouter()
 router.register(r'satellitetrajectories', FlatSatelliteTrajectoryViewset, 'satellitetrajectories')
+router.register(r'satelliteinfo', SatCatViewSet, 'satelliteinfo')
+
+api_urls = [
+               # non-viewset views
+           ] + router.urls
 
 satsound_urls = [
     url(r'^$', index, name='index'),

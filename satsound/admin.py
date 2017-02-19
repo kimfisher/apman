@@ -28,5 +28,4 @@ admin.site.register(SatelliteAudio)
 class ObserverAdmin(admin.ModelAdmin):
     readonly_fields = ('timezone',)
 
-
 admin.site.register(Observer, ObserverAdmin)

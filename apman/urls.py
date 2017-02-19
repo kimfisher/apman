@@ -28,6 +28,6 @@ urlpatterns = [
                   url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
                   url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
                   url(r'^admin/', admin.site.urls, name='admin'),
-                  url(r'^api/', include(router.urls), name='api-root'),
+                  url(r'^api/', include(api_urls), name='api-root'),
                   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
