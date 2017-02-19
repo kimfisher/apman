@@ -179,6 +179,10 @@ MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio t
 TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 DEFAULT_TIMEZONE = 'Europe/London'
 
+CSRF_TRUSTED_ORIGINS = (
+    '.sonicplanetarium.net',
+)
+
 # Email configuration.
 
 EMAIL_HOST = 'smtp.gmail.com'
