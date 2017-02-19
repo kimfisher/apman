@@ -181,9 +181,10 @@ MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio t
 TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 DEFAULT_TIMEZONE = 'Europe/London'
 
-CORS_ORIGIN_WHITELIST = (
-    'sonicplanetarium.net',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'sonicplanetarium.net',
+# )
 CSRF_TRUSTED_ORIGINS = (
     '.sonicplanetarium.net',
 )
