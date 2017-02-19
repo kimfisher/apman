@@ -53,11 +53,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
-    'corsheaders',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -181,9 +181,9 @@ MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio t
 TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 DEFAULT_TIMEZONE = 'Europe/London'
 
-CORS_ORIGIN_WHITELIST = (
-    'sonicplanetarium.net'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'sonicplanetarium.net'
+# )
 CSRF_TRUSTED_ORIGINS = (
     '.sonicplanetarium.net',
 )
