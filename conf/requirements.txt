@@ -5,6 +5,7 @@ pyephem==3.7.6.0
 django-extensions==1.7.5
 spacetrack==0.12.0
 djangorestframework==3.5.3
+django-cors-headers==2.0.2
 Markdown==2.6.7
 django-filter==1.0.1
 python-magic==0.4.12
