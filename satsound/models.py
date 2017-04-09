@@ -219,12 +219,19 @@ class SatelliteTrajectory(BaseModel):
 
 
 class SatelliteAudio(BaseModel):
+    TYPES = (
+        (1, u'recorded transmission'),
+        (2, u'interpretation'),
+    )
+
     satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     attribution = models.CharField(max_length=100, blank=True)
     # if we decide we need to override filename with this pk:
     # http://stackoverflow.com/questions/651949/django-access-primary-key-in-models-filefieldupload-to-location
     audio = models.FileField(upload_to=satellite_upload, validators=[validate_audio_size, validate_audio_type])
+    reviewed = models.BooleanField(default=False)
+    type = models.PositiveSmallIntegerField(choices=TYPES)
 
     def __unicode__(self):
         return '%s %s' % (self.satellite.pk, self.attribution)

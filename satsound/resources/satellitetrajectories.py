@@ -17,6 +17,8 @@ class FlatSatelliteTrajectorySerializer(serializers.ModelSerializer):
     audiofile = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
     attribution = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
+    reviewed = serializers.SerializerMethodField()
 
     def _choose_audio(self, obj):
         if obj._audio is None:
@@ -35,6 +37,14 @@ class FlatSatelliteTrajectorySerializer(serializers.ModelSerializer):
                     obj._audio = audios[random_index]
 
         return obj._audio
+
+    def _get_type_by_id(self, obj):
+        ret = None
+        for type in SatelliteAudio.TYPES:
+            if obj._audio.type == type[0]:
+                ret = type[1]
+
+        return ret
 
     def get_norad_id(self, obj):
         return obj.satellite.pk
@@ -79,6 +89,20 @@ class FlatSatelliteTrajectorySerializer(serializers.ModelSerializer):
             ret = obj._audio.attribution
         return ret
 
+    def get_type(self, obj):
+        ret = None
+        self._choose_audio(obj)
+        if obj._audio is not None:
+            ret = self._get_type_by_id(obj)
+        return ret
+
+    def get_reviewed(self, obj):
+        ret = None
+        self._choose_audio(obj)
+        if obj._audio is not None:
+            ret = obj._audio.reviewed
+        return ret
+
     class Meta:
         model = SatelliteTrajectory
         fields = (
@@ -93,6 +117,8 @@ class FlatSatelliteTrajectorySerializer(serializers.ModelSerializer):
             'audiofile',
             'username',
             'attribution',
+            'type',
+            'reviewed',
         )
 
 

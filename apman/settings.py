@@ -187,7 +187,7 @@ AUDIO_TYPES = (
 MAX_AUDIOFILE_SIZE = 30 * 1024 * 1024  # mb
 
 MAX_IMMINENCE = 1  # number of hours to consider 'recent' when comparing audio timestamps to trajectory rise times
-TRAJECTORY_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+TRAJECTORY_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S'  # 2017-03-21T18:47:28
 DEFAULT_TIMEZONE = 'Europe/London'
 
 # CORS_ORIGIN_ALLOW_ALL = True

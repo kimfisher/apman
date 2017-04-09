@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sonic Planetarium Audio Upload: {{ sat.name }}</title>
-</head>
-<body>
-<p>This is the page for uploading an audio file for {{ sat.pk }}: {{ sat.name }}</p>
-</body>
-</html>
+{% extends "satsound/base.html" %}
+{% block title %}Sonic Planetarium Audio Upload: {{ sat.name }} [{{ sat.pk }}]{% endblock title %}
+{% block main_content %}
+Sonic Planetarium Audio Upload: {{ sat.name }} [{{ sat.pk }}]
+<form action="./" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" name="_submit_audio" value="Upload">
+</form>
+{% endblock main_content %}
