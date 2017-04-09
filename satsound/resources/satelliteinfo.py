@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import serializers, viewsets
 from rest_framework.response import Response
 from spacetrack import SpaceTrackClient
@@ -11,12 +13,25 @@ from spacetrack import SpaceTrackClient
 #             setattr(self, field, kwargs.get(field, None))
 
 
+def is_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
 class SatCatSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):
-        # dynamically set fields based on whatever is passed back by the spacetrack api (all CharFields)
+        # dynamically set fields based on whatever is passed back by the spacetrack api
         if 'instance' in kwargs and len(kwargs['instance']) > 0:
             for field in kwargs['instance'][0]:
                 self.fields[field] = serializers.CharField()
+                if kwargs['instance'][0][field] is not None:
+                    if kwargs['instance'][0][field].isnumeric():
+                        self.fields[field] = serializers.IntegerField()
+                    elif is_float(kwargs['instance'][0][field]):
+                        self.fields[field] = serializers.FloatField()
 
         super(SatCatSerializer, self).__init__(*args, **kwargs)
 
@@ -25,10 +40,13 @@ class SatCatViewSet(viewsets.ViewSet):
     serializer_class = SatCatSerializer
     permission_classes = []
 
+    # Cache sattrack result for 24 hours
+    @method_decorator(cache_page(60 * 60 * 24))
     def list(self, request):
         response = ''
         if request.query_params:
             params = request.query_params.dict()
+            params['metadata'] = 'false'  # required for serializer
             if 'format' in params:
                 params.pop('format')
             st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)

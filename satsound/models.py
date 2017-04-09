@@ -170,8 +170,8 @@ class Observer(BaseModel):
 
 
 class SatelliteTrajectory(BaseModel):
-    satellite = models.ForeignKey(Satellite)
-    observer = models.ForeignKey(Observer)
+    satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
+    observer = models.ForeignKey(Observer, on_delete=models.CASCADE)
     rise_time = models.DateTimeField(verbose_name=u'rise time')  # UTC
     rise_azimuth = models.DecimalField(decimal_places=6, max_digits=9, verbose_name=u'rise azimuth')
     maxalt_time = models.DateTimeField(verbose_name=u'maximum altitude time')
@@ -219,8 +219,8 @@ class SatelliteTrajectory(BaseModel):
 
 
 class SatelliteAudio(BaseModel):
-    satellite = models.ForeignKey(Satellite)
-    user = models.ForeignKey(User)
+    satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     attribution = models.CharField(max_length=100, blank=True)
     # if we decide we need to override filename with this pk:
     # http://stackoverflow.com/questions/651949/django-access-primary-key-in-models-filefieldupload-to-location
