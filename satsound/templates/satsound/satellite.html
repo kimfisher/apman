@@ -1,12 +1,13 @@
 {% extends "satsound/base.html" %}
-{% block title %}Sonic Planetarium Audio Upload: {{ sat.name }} [{{ sat.pk }}]{% endblock title %}
-{% block main_content %}
-Sonic Planetarium Audio Upload: {{ sat.name }} [{{ sat.pk }}]
+{% block head_title %}Audio Upload: {{ sat.name }} [{{ sat.pk }}]{% endblock %}
+{% block content %}
+<h1>Audio Upload</h1>
+<h3>{{ sat.name }} [{{ sat.pk }}]</h3>
 <form action="./" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" name="_submit_audio" value="Upload">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <input type="submit" name="_submit_audio" value="Upload">
 </form>
-{% endblock main_content %}
+{% endblock %}

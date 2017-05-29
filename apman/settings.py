@@ -74,7 +74,7 @@ ROOT_URLCONF = 'apman.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,11 +151,15 @@ AWS_ACCESS_KEY_ID = os.getenv('APMAN_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('APMAN_AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.getenv('APMAN_STORAGE_BUCKET_NAME')
 AWS_QUERYSTRING_AUTH = False
-S3_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_CUSTOM_DOMAIN = 'static.sonicplanetarium.net'
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+WPSTATIC_URL = '//sonicplanetarium.net/wp-content/'
 
 if USE_S3:
     DEFAULT_FILE_STORAGE = 'apman.s3utils.MediaRootS3BotoStorage'
-    MEDIA_URL = '%s%s' % (S3_URL, 'media/')
+    STATICFILES_STORAGE = 'apman.s3utils.StatRootS3BotoStorage'
+    STATIC_URL = '//%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, 'static')
+    MEDIA_URL = '//%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, 'media')
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

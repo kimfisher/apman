@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sonic Planetarium Audio Upload</title>
-</head>
-<body>
-<p>This is the site for uploading audio files for specific satellites.</p>
-<p><a href="{% url 'satellite' 25544 %}">Try an upload for the International Space Station.</a></p>
-</body>
-</html>
+{% extends "satsound/base.html" %}
+{% block head_title %}Sonic Planetarium Audio Management{% endblock %}
+{% block content %}
+<h1>My Things</h1>
+<p>
+  List/table of satellite audio contributed by me to go here, ordered by satellite name. Satellite name, maybe original
+  audio name?, delete link?
+  <a href="{% url 'satellite' 25544 %}">Try an upload for the International Space Station.</a>
+</p>
+{% endblock %}
