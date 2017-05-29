@@ -47,8 +47,11 @@ class SatCatViewSet(viewsets.ViewSet):
         if request.query_params:
             params = request.query_params.dict()
             params['metadata'] = 'false'  # required for serializer
+            # TODO: create canonical list of allowable params, and check against that
             if 'format' in params:
                 params.pop('format')
+            if '_' in params:
+                params.pop('_')
             st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
             response = st.satcat(**params)
 
