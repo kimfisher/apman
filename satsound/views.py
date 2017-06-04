@@ -14,16 +14,32 @@ def index(request):
 
 @login_required
 def satellite(request, norad_id):
-    sat = {'pk': norad_id, 'name': 'not found'}
+    sat = {'pk': norad_id, 'name': 'TBD'}
+    newsat = False
     try:
         sat = Satellite.objects.get(pk=norad_id)
     except Satellite.DoesNotExist:
-        pass
+        newsat = True
+        st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
+        # https://www.space-track.org/basicspacedata/query/class/satcat/NORAD_CAT_ID/3/orderby/INTLDES asc/metadata/false
+        params = {
+            'norad_cat_id': norad_id,
+            'metadata': False
+        }
+        response = st.satcat(**params)
+
+        if len(response) == 1:
+            sat = Satellite(
+                norad_id=norad_id,
+                name=response[0].get('OBJECT_NAME', '')
+            )
 
     if request.method == 'POST':
         form = SatelliteAudioForm(request.POST, request.FILES)
         if form.is_valid():
             sa = SatelliteAudio()
+            if newsat:
+                sat.save()
             sa.satellite = sat
             sa.user = request.user
             sa.attribution = form.cleaned_data['attribution']
