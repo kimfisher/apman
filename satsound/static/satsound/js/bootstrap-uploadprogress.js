@@ -202,8 +202,8 @@
 
     $.fn.uploadprogress.defaults = {
         template: template,
-        finished_percent: 60,
-        additional_seconds: 10
+        finished_percent: 80,
+        additional_seconds: 5
         //redirect_url: ...
 
         // need to customize stuff? Add here, and change code accordingly.
