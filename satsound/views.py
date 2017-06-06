@@ -34,6 +34,7 @@ def satellite(request, norad_id):
                 name=response[0].get('OBJECT_NAME', '')
             )
 
+    status = 200
     if request.method == 'POST':
         form = SatelliteAudioForm(request.POST, request.FILES)
         if form.is_valid():
@@ -49,6 +50,9 @@ def satellite(request, norad_id):
 
             return HttpResponseRedirect(reverse('index'))
 
+        else:
+            status = 422  # signal error to UploadProgress
+
     else:
         form = SatelliteAudioForm()
-    return render(request, 'satsound/satellite.html', {'sat': sat, 'form': form})
+    return render(request, 'satsound/satellite.html', {'sat': sat, 'form': form}, status=status)
