@@ -15,6 +15,7 @@ class SatelliteAudioInline(admin.StackedInline):
 
 
 class SatelliteAdmin(admin.ModelAdmin):
+    list_display = ['norad_id', 'name', ]
     inlines = [
         SatelliteTrajectoryInline,
         SatelliteAudioInline,
@@ -23,7 +24,8 @@ class SatelliteAdmin(admin.ModelAdmin):
 
 
 class SatelliteAudioAdmin(admin.ModelAdmin):
-    list_display = ['__unicode__', 'user', 'type', 'reviewed', ]
+    list_display = ['__unicode__', 'satellite', 'user', 'type', 'reviewed', ]
+    list_filter = ['type', 'reviewed', ]
     list_select_related = True
 
 
