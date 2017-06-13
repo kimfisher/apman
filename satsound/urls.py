@@ -14,5 +14,5 @@ api_urls = [
 
 satsound_urls = [
     url(r'^$', index, name='index'),
-    url(r'^sat/(?P<norad_id>[0-9]+)/$', satellite, name='satellite'),
+    url(r'^sat/(?P<norad_id>[\w\-]+)/$', satellite, name='satellite'),
 ]

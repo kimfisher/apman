@@ -14,10 +14,11 @@ def index(request):
 
 @login_required
 def satellite(request, norad_id):
-    sat = {'pk': norad_id, 'name': 'TBD'}
+    sat = None
     newsat = False
     try:
-        sat = Satellite.objects.get(pk=norad_id)
+        if norad_id.isdigit():
+            sat = Satellite.objects.get(pk=norad_id)
     except Satellite.DoesNotExist:
         newsat = True
         st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
@@ -55,4 +56,4 @@ def satellite(request, norad_id):
 
     else:
         form = SatelliteAudioForm()
-    return render(request, 'satsound/satellite.html', {'sat': sat, 'form': form}, status=status)
+    return render(request, 'satsound/satellite.html', {'sat': sat, 'form': form, 'norad_id': norad_id}, status=status)

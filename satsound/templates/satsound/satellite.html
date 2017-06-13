@@ -1,9 +1,22 @@
 {% extends "satsound/base.html" %}
 {% load staticfiles %}
-{% block head_title %}Audio Upload: {{ sat.name }} [{{ sat.pk }}]{% endblock %}
+{% block head_title %}
+Audio Upload:
+{% if sat %}{{ sat.name }} [{{ sat.pk }}]
+{% else %}
+Invalid satellite id
+{% endif %}
+{% endblock %}
 {% block content %}
 <h1>Audio Upload</h1>
-<h3>Satellite: {{ sat.pk }}{% if sat.name %} [{{ sat.name }}]{% endif %}</h3>
+<h3>
+  {% if sat %}
+  Satellite: {{ sat.pk }}{% if sat.name %} [{{ sat.name }}]{% endif %}
+  {% else %}
+  Invalid satellite id
+  {% endif %}
+</h3>
+{% if sat %}
 <form id="sataudio" action="./" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <table>
@@ -11,12 +24,15 @@
   </table>
   <input type="submit" name="_submit_audio" value="Upload">
 </form>
+{% else %}
+The NORAD id you entered, {{ norad_id }}, is invalid. Please check the id of the desired satellite and make sure it is listed by
+<a href="https://www.space-track.org/" target="_blank">space-track.org</a>.
+<p><a href="https://sonicplanetarium.net/participate/">Sonic Planetarium Participate page</a></p>
+{% endif %}
 {% endblock %}
 {% block extra_script %}
 <script type="text/javascript" src="{% static 'satsound/js/bootstrap-uploadprogress.js' %}"></script>
 <script type="text/javascript">
 $("#sataudio").uploadprogress({redirect_url: '{% url 'index' %}'});
-
-
 </script>
 {% endblock %}

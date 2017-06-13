@@ -22,10 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('APMAN_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('APMAN_DEBUG', False)
-USE_S3 = os.getenv('APMAN_USE_S3', True)
-SESSION_COOKIE_SECURE = os.getenv('APMAN_SESSION_COOKIE_SECURE', True)
-CSRF_COOKIE_SECURE = os.getenv('APMAN_CSRF_COOKIE_SECURE', True)
+DEBUG = os.getenv('APMAN_DEBUG', 'false').lower() == 'true'
+USE_S3 = os.getenv('APMAN_USE_S3', 'true').lower() == 'true'
+SESSION_COOKIE_SECURE = os.getenv('APMAN_SESSION_COOKIE_SECURE', 'true').lower() == 'true'
+CSRF_COOKIE_SECURE = os.getenv('APMAN_CSRF_COOKIE_SECURE', 'true').lower() == 'true'
 ALLOWED_HOSTS = os.getenv('APMAN_ALLOWED_HOSTS').split(',')
 ADMINS = [('Sonic Planetarium Support', os.getenv('APMAN_EMAIL_HOST_USER')), ]
 

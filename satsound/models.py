@@ -56,71 +56,72 @@ class Satellite(BaseModel):
         self.tle = '\n'.join(tle)
 
     def update_trajectories(self):
-        self.satellitetrajectory_set.all().delete()
+        if self.tle != '':
+            self.satellitetrajectory_set.all().delete()
 
-        line1 = unicodedata.normalize('NFKD', self.name).encode('ascii', 'ignore')  # not strictly necessary
-        line2, line3 = self.tle.split('\n')
-        s = ephem.readtle(line1, line2, line3)
+            line1 = unicodedata.normalize('NFKD', self.name).encode('ascii', 'ignore')  # not strictly necessary
+            line2, line3 = self.tle.split('\n')
+            s = ephem.readtle(line1, line2, line3)
 
-        for observer in Observer.objects.all():
-            # http://rhodesmill.org/pyephem/quick
-            o = ephem.Observer()
-            o.lat = decdeg2dms(observer.lat)
-            o.lon = decdeg2dms(observer.lon)
-            o.elevation = observer.elevation
-            # From documentation: Rising and setting are sensitive to atmospheric refraction at the horizon, and
-            # therefore to the observer's temp and pressure; set the pressure to zero to turn off refraction.
-            o.pressure = 0  # (defaults to 1010mBar)
-            # o.temp (defaults to 25C)
-            # o.horizon: defaults to 0, but may want to set to 34 or make observer-dependent. From documentation:
-            # The United States Naval Observatory, rather than computing refraction dynamically,
-            # uses a constant estimate of 34' of refraction at the horizon. To determine when a body will rise
-            # "high enough" above haze or obstacles, set horizon to a positive number of degrees.
-            # A negative value of horizon can be used when an observer is high off of the ground.
+            for observer in Observer.objects.all():
+                # http://rhodesmill.org/pyephem/quick
+                o = ephem.Observer()
+                o.lat = decdeg2dms(observer.lat)
+                o.lon = decdeg2dms(observer.lon)
+                o.elevation = observer.elevation
+                # From documentation: Rising and setting are sensitive to atmospheric refraction at the horizon, and
+                # therefore to the observer's temp and pressure; set the pressure to zero to turn off refraction.
+                o.pressure = 0  # (defaults to 1010mBar)
+                # o.temp (defaults to 25C)
+                # o.horizon: defaults to 0, but may want to set to 34 or make observer-dependent. From documentation:
+                # The United States Naval Observatory, rather than computing refraction dynamically,
+                # uses a constant estimate of 34' of refraction at the horizon. To determine when a body will rise
+                # "high enough" above haze or obstacles, set horizon to a positive number of degrees.
+                # A negative value of horizon can be used when an observer is high off of the ground.
 
-            o.date = o.epoch = ephem.now()
-            date_limit = ephem.Date(o.date + observer.trajectory_window * ephem.hour)
-            traj = []
-            while o.date < date_limit:
-                try:
-                    np = o.next_pass(s)
-                    logger.info('%s next pass: %s' % (self.pk, np))
+                o.date = o.epoch = ephem.now()
+                date_limit = ephem.Date(o.date + observer.trajectory_window * ephem.hour)
+                traj = []
+                while o.date < date_limit:
                     try:
-                        assert np[0] < np[2] < np[4]
-
+                        np = o.next_pass(s)
+                        logger.info('%s next pass: %s' % (self.pk, np))
                         try:
-                            assert traj != np
+                            assert np[0] < np[2] < np[4]
 
-                            st = SatelliteTrajectory()
-                            st.satellite = self
-                            st.observer = observer
-                            st.rise_time = timezone.make_aware(np[0].datetime(), timezone.utc)
-                            st.rise_azimuth = math.degrees(np[1])
-                            st.maxalt_time = timezone.make_aware(np[2].datetime(), timezone.utc)
-                            st.maxalt_altitude = math.degrees(np[3])
-                            st.set_time = timezone.make_aware(np[4].datetime(), timezone.utc)
-                            st.set_azimuth = math.degrees(np[5])
+                            try:
+                                assert traj != np
 
-                            st.save()
-                            o.date = o.epoch = np[4]
-                            traj = np
+                                st = SatelliteTrajectory()
+                                st.satellite = self
+                                st.observer = observer
+                                st.rise_time = timezone.make_aware(np[0].datetime(), timezone.utc)
+                                st.rise_azimuth = math.degrees(np[1])
+                                st.maxalt_time = timezone.make_aware(np[2].datetime(), timezone.utc)
+                                st.maxalt_altitude = math.degrees(np[3])
+                                st.set_time = timezone.make_aware(np[4].datetime(), timezone.utc)
+                                st.set_azimuth = math.degrees(np[5])
 
-                        except AssertionError:  # If we get trapped in a loop, bail
-                            logger.error('Repeated trajectory. Discarding %s and bailing.' % (np,))
-                            o.date = o.epoch = date_limit
+                                st.save()
+                                o.date = o.epoch = np[4]
+                                traj = np
 
-                    except AssertionError:
-                        logger.error('Pass times out of order. Discarding %s' % (np,))
-                        # If the traj times are out of order, use the latest datetime to move forward.
-                        # What appears to cause this is max_alt_time and/or set_time being None,
-                        # so that previous np[2] and np[4] aren't overwritten.
-                        # http://rhodesmill.org/pyephem/quick.html under transit, rising, setting:
-                        # "Any of the tuple values can be None if that event was not found."
-                        o.date = o.epoch = max(np[0], np[2], np[4])
+                            except AssertionError:  # If we get trapped in a loop, bail
+                                logger.error('Repeated trajectory. Discarding %s and bailing.' % (np,))
+                                o.date = o.epoch = date_limit
 
-                except ValueError:
-                    o.date = o.epoch = date_limit
-                    # TODO: handle geosynchronous satellites (no trajectories calculated)
+                        except AssertionError:
+                            logger.error('Pass times out of order. Discarding %s' % (np,))
+                            # If the traj times are out of order, use the latest datetime to move forward.
+                            # What appears to cause this is max_alt_time and/or set_time being None,
+                            # so that previous np[2] and np[4] aren't overwritten.
+                            # http://rhodesmill.org/pyephem/quick.html under transit, rising, setting:
+                            # "Any of the tuple values can be None if that event was not found."
+                            o.date = o.epoch = max(np[0], np[2], np[4])
+
+                    except ValueError:
+                        o.date = o.epoch = date_limit
+                        # TODO: handle geosynchronous satellites (no trajectories calculated)
 
     def save(self, *args, **kwargs):
         newsat = False
