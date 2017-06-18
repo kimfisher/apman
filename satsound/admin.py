@@ -23,6 +23,10 @@ class SatelliteAdmin(admin.ModelAdmin):
     list_select_related = True
 
 
+class SatCatCacheAdmin(admin.ModelAdmin):
+    list_display = ['norad_id', 'name', ]
+
+
 class SatelliteAudioAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'satellite', 'user', 'type', 'reviewed', ]
     list_filter = ['type', 'reviewed', ]
@@ -68,6 +72,7 @@ class ObserverAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Satellite, SatelliteAdmin)
+admin.site.register(SatCatCache, SatCatCacheAdmin)
 admin.site.register(SatelliteTrajectory, SatelliteTrajectoryAdmin)
 admin.site.register(SatelliteAudio, SatelliteAudioAdmin)
 admin.site.register(Observer, ObserverAdmin)

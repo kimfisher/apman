@@ -138,6 +138,14 @@ class Satellite(BaseModel):
         return '%s %s' % (self.norad_id, self.name)
 
 
+class SatCatCache(BaseModel):
+    norad_id = models.IntegerField(primary_key=True, verbose_name=u'NORAD catalog number')
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return '%s %s' % (self.norad_id, self.name)
+
+
 class Observer(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # if we use postgres, we can use geodjango to store lat/lon as a Point

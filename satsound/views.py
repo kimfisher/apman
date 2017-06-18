@@ -21,19 +21,29 @@ def satellite(request, norad_id):
             sat = Satellite.objects.get(pk=norad_id)
     except Satellite.DoesNotExist:
         newsat = True
-        st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
-        # https://www.space-track.org/basicspacedata/query/class/satcat/NORAD_CAT_ID/3/orderby/INTLDES asc/metadata/false
-        params = {
-            'norad_cat_id': norad_id,
-            'metadata': False
-        }
-        response = st.satcat(**params)
-
-        if len(response) == 1:
+        # see if satellite exists in our satcat cache before hitting space track
+        try:
+            satcat = SatCatCache.objects.get(pk=norad_id)
             sat = Satellite(
                 norad_id=norad_id,
-                name=response[0].get('OBJECT_NAME', '')
+                name=satcat.name
             )
+            print('hit satcat cache')
+        except SatCatCache.DoesNotExist:
+            st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
+            # https://www.space-track.org/basicspacedata/query/class/satcat/NORAD_CAT_ID/3/orderby/INTLDES asc/metadata/false
+            params = {
+                'norad_cat_id': norad_id,
+                'metadata': False
+            }
+            response = st.satcat(**params)
+
+            if len(response) == 1:
+                sat = Satellite(
+                    norad_id=norad_id,
+                    name=response[0].get('OBJECT_NAME', '')
+                )
+            print('hit spacetrack')
 
     status = 200
     if request.method == 'POST':
