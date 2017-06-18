@@ -28,7 +28,6 @@ def satellite(request, norad_id):
                 norad_id=norad_id,
                 name=satcat.name
             )
-            print('hit satcat cache')
         except SatCatCache.DoesNotExist:
             st = SpaceTrackClient(identity=settings.SPACETRACK_IDENTITY, password=settings.SPACETRACK_PASSWORD)
             # https://www.space-track.org/basicspacedata/query/class/satcat/NORAD_CAT_ID/3/orderby/INTLDES asc/metadata/false
@@ -43,7 +42,6 @@ def satellite(request, norad_id):
                     norad_id=norad_id,
                     name=response[0].get('OBJECT_NAME', '')
                 )
-            print('hit spacetrack')
 
     status = 200
     if request.method == 'POST':
