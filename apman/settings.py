@@ -203,7 +203,6 @@ CSRF_TRUSTED_ORIGINS = (
 )
 
 # Email configuration.
-
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('APMAN_EMAIL_HOST_USER')
