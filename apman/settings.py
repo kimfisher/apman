@@ -205,6 +205,8 @@ CSRF_TRUSTED_ORIGINS = (
 # Email configuration.
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
+# EMAIL_HOST = 'mail.heidineilson.com'
+# EMAIL_PORT = 110
 EMAIL_HOST_USER = os.getenv('APMAN_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('APMAN_EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
@@ -215,7 +217,7 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # mandatory, none
-ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = False
 
 LOGGING = {
     'version': 1,
@@ -277,7 +279,7 @@ LOGGING = {
             'handlers': ['console'],
         },
         'commands': {
-            'handlers': ['commands_logfile', 'mail_admins'],
+            'handlers': ['commands_logfile'],
             'level': 'INFO',
             'propagate': True,
         },
