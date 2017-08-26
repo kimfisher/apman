@@ -9,7 +9,8 @@ from .models import *
 
 @login_required
 def index(request):
-    return render(request, 'satsound/index.html')
+    user_audio = SatelliteAudio.objects.filter(user=request.user)
+    return render(request, 'satsound/index.html', {'user_audio': user_audio})
 
 
 @login_required

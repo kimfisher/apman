@@ -85,7 +85,7 @@ class Satellite(BaseModel):
                 while o.date < date_limit:
                     try:
                         np = o.next_pass(s)
-                        logger.info('%s next pass: %s' % (self.pk, np))
+                        # logger.info('%s next pass: %s' % (self.pk, np))
                         try:
                             assert np[0] < np[2] < np[4]
 
@@ -111,7 +111,8 @@ class Satellite(BaseModel):
                                 o.date = o.epoch = date_limit
 
                         except AssertionError:
-                            logger.error('Pass times out of order. Discarding %s' % (np,))
+                            # uncomment next line if we want to dig into why we're getting None for events
+                            # logger.error('%s Pass times out of order. Discarding %s' % (self.pk, np))
                             # If the traj times are out of order, use the latest datetime to move forward.
                             # What appears to cause this is max_alt_time and/or set_time being None,
                             # so that previous np[2] and np[4] aren't overwritten.

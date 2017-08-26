@@ -38,7 +38,7 @@
         <ul class="nav navbar-nav">
           {% block nav %}
           <li><a href="https://sonicplanetarium.net/participate/">Participate</a></li>
-          <li><a href="/">My Things</a></li>
+          <li><a href="/">My Audio</a></li>
           {% if user.is_authenticated %}
           <li><a href="{% url 'account_email' %}">Hello {{ user.username }}</a></li>
           <li><a href="{% url 'account_logout' %}">Sign Out</a></li>

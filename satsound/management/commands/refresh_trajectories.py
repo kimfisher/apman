@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
         for i in range(0, bincount):
             query_ids = ids[i * kwargs['bin']: (i + 1) * kwargs['bin']]
-            logger.info('bin %s ids: %s' % (i, str(query_ids)))
+            # logger.info('bin %s ids: %s' % (i, str(query_ids)))
             # self.stdout.write(str(query_ids))
             tles = st.tle_latest(iter_lines=True, ordinal=1, norad_cat_id=query_ids, format='tle')
 
