@@ -1,36 +1,42 @@
 {% extends "satsound/base.html" %}
 {% load staticfiles %}
 {% block extra_head %}
-<link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="//cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/r-2.2.0/datatables.min.css"/>
 <link href="{% static 'satsound/css/bootstrap3_player.css' %}" rel="stylesheet">
 <style>
-  input, select, textarea {
-    width: auto;
+  input, select, textarea, .btn {
+    width: auto!important;
   }
-
-
-
+  .container-fluid.playa, .btn-group {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .hidden-xs {
+    display: none!important;
+  }
+  table.dataTable thead td {
+      padding: 8px 24px 8px 10px!important;
+  }
 </style>
 {% endblock %}
 {% block head_title %}Sonic Planetarium Audio Management{% endblock %}
 {% block content %}
 <h1>My Audio</h1>
 {% if user_audio %}
-<table id="userAudio" class="nowrap hover">
+<table id="userAudio" class="table hover">
   <thead>
   <td>Satellite</td>
   <td>Audio</td>
   <td>Attribution</td>
   <td>Type</td>
   <td>Created</td>
-  <td>Delete</td>
+  <td></td>
   </thead>
   {% for audio in user_audio %}
   <tr>
     <td>{{ audio.satellite_id }}</td>
     <td>
-      <audio controls>
+      <audio controls preload="metadata">
         <source src="{{ audio.audio.url }}"/>
         <a href="{{ audio.audio.url }}">{{ audio.audio }}</a>
         An html5-capable browser is required to play this audio.
@@ -54,21 +60,19 @@ No audio yet. Upload audio for <a href="{% url 'satellite' 25544 %}">a satellite
 {% endif %}
 {% endblock %}
 {% block extra_script %}
-<script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="//cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/r-2.2.0/datatables.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#userAudio').DataTable({
-    responsive: true,
+    //responsive: true,
     "columnDefs": [
       {"orderable": false, "targets": [1,5]},
-      {}
+      //{"className": "dt-head-center", "targets": 5} // only if not using bootstrap dt css
+      //{"className": "dt-nowrap", "targets": 4} // only if not using bootstrap dt css
+      //{"width": "100px", "targets": 4}
     ]
   });
 });
-
-
-
 </script>
 <script src="{% static 'satsound/js/bootstrap3_player.js' %}"></script>
 {% endblock %}
