@@ -22,7 +22,7 @@ class FlatSatelliteTrajectorySerializer(serializers.ModelSerializer):
 
     def _choose_audio(self, obj):
         if obj._audio is None:
-            audios = obj.satellite.satelliteaudio_set.all().order_by('-updated')
+            audios = obj.satellite.satelliteaudio_set.filter(reviewed=True).order_by('-updated')
             if audios.count() > 0:
                 # observer_window = datetime.timedelta(hours=int(obj.observer.trajectory_window))
                 # recent_window = timezone.now() - observer_window

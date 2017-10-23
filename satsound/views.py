@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -10,7 +11,7 @@ from .models import *
 @login_required
 def index(request):
     user_audio = SatelliteAudio.objects.filter(user=request.user)
-    return render(request, 'satsound/index.html', {'user_audio': user_audio})
+    return render(request, 'satsound/index.html', {'user_audio': user_audio, 'is_ajax': request.is_ajax()})
 
 
 @login_required
@@ -58,9 +59,15 @@ def satellite(request, norad_id):
             sa.type = form.cleaned_data['type']
             sa.save()
 
+            messages.success(request,
+                             '''Audio for %s successfully submitted. The audio will be available to the system once '''
+                             ''' it has been reviewed by an administrator.''' % sat.name)
             return HttpResponseRedirect(reverse('index'))
 
         else:
+            messages.error(request,
+                           '''Error uploading audio for %s. If you do not see any other messages about why, please '''
+                           '''contact %s for assistance.''' % (sat.name, settings.ADMINS[0][1]))
             status = 422  # signal error to UploadProgress
 
     else:

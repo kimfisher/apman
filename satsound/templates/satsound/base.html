@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="{% static 'satsound/favicon.ico' %}"/>
+  <link rel="shortcut icon" href="{% static 'satsound/dot.png' %}"/>
   <title>{% block head_title %}{% endblock %}</title>
 
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -21,7 +21,7 @@
   <link rel='stylesheet' id='ui-fontsize.css-css'
         href='{% wpstatic "plugins/wp-accessibility/toolbar/css/a11y-fontsize.css" %}' type='text/css' media='all'/>
   <link rel="stylesheet" href='{% wpstatic "themes/leiden-master/style.css" %}'/>
-  <link href="//fonts.googleapis.com/css?family=Oswald|Open+Sans:300,400|Share+Tech+Mono" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Vollkorn:400;400i|Open+Sans:300,400" rel="stylesheet">
   {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -56,7 +56,7 @@
 <section tabindex="-1" class=" focusable">
   <div class="container well">
     <div>
-      {% if messages %}
+      {% if messages and not is_ajax %}
       <div>
         <strong>Messages:</strong>
         <ul>

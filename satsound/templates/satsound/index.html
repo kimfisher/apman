@@ -35,7 +35,7 @@
   {% for audio in user_audio %}
   <tr>
     <td>{{ audio.satellite_id }}</td>
-    <td>
+    <td style="white-space: nowrap;">
       <audio controls preload="metadata">
         <source src="{{ audio.audio.url }}"/>
         <a href="{{ audio.audio.url }}">{{ audio.audio }}</a>
