@@ -15,7 +15,7 @@ def index(request):
 
 
 @login_required
-def satellite(request, norad_id):
+def sataudio(request, norad_id):
     sat = None
     newsat = False
     try:

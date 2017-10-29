@@ -7,6 +7,7 @@ from .views import *
 router = routers.DefaultRouter()
 router.register(r'satellitetrajectories', FlatSatelliteTrajectoryViewset, 'satellitetrajectories')
 router.register(r'satelliteinfo', SatCatViewSet, 'satelliteinfo')
+router.register(r'satelliteaudio', SatelliteAudioViewset, 'satelliteaudio')
 
 api_urls = [
                # non-viewset views
@@ -14,5 +15,5 @@ api_urls = [
 
 satsound_urls = [
     url(r'^$', index, name='index'),
-    url(r'^sat/(?P<norad_id>[\w\-]+)/$', satellite, name='satellite'),
+    url(r'^sat/(?P<norad_id>[\w\-]+)/$', sataudio, name='satellite'),
 ]
