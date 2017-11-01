@@ -1,21 +1,11 @@
 {% extends "satsound/base.html" %}
 {% load staticfiles %}
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/r-2.2.0/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"/>
 <link href="{% static 'satsound/css/bootstrap3_player.css' %}" rel="stylesheet">
 <style>
   input, select, textarea, .btn {
     width: auto!important;
-  }
-  .container-fluid.playa, .btn-group {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .hidden-xs {
-    display: none!important;
-  }
-  table.dataTable thead td {
-      padding: 8px 24px 8px 10px!important;
   }
 </style>
 {% endblock %}
@@ -23,15 +13,15 @@
 {% block content %}
 <h1>My Audio</h1>
 {% if user_audio %}
-<table id="userAudio" class="table hover">
+<table id="userAudio" class="display">
   <thead>
   <tr>
-    <td>Satellite</td>
-    <td>Audio</td>
-    <td>Attribution</td>
-    <td>Type</td>
-    <td>Created</td>
-    <td></td>
+    <th>Satellite</th>
+    <th>Audio</th>
+    <th>Attribution</th>
+    <th>Type</th>
+    <th>Created</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -93,7 +83,7 @@ No audio yet. Upload audio for <a href="{% url 'satellite' 25544 %}">a satellite
 </div>
 {% endblock %}
 {% block extra_script %}
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/r-2.2.0/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
