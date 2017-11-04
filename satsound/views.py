@@ -1,5 +1,8 @@
+from smtplib import SMTPException
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -58,6 +61,24 @@ def sataudio(request, norad_id):
             sa.audio = request.FILES['audio']
             sa.type = form.cleaned_data['type']
             sa.save()
+
+            try:
+                subject = 'Audio file uploaded for %s' % sat.norad_id
+                url = reverse('admin:satsound_satelliteaudio_change', args=(sa.pk,))
+                params = {
+                    'username': request.user.username,
+                    'sat_id': sat.norad_id,
+                    'sat_name': sat.name,
+                    'url': request.build_absolute_uri(url)
+                }
+                message = ('{username} uploaded an audio file for satellite {sat_id} ({sat_name}). '
+                           'To approve or remove this contribution:\n{url}'''.format(**params))
+                send_mail(subject, message, settings.ADMINS[0][1], [settings.ADMINS[0][1]])
+            except SMTPException:
+                messages.error(request,
+                               '''Error emailing administrator for review. Please contact %s with this error '''
+                               '''and the id of the satellite (%s) for which you uploaded audio.'''
+                               % (settings.ADMINS[0][1], sat.norad_id))
 
             messages.success(request,
                              '''Audio for %s successfully submitted. The audio will be available to the system once '''
