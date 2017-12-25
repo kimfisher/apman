@@ -133,6 +133,7 @@
 
             // Replace the contents of the form, with the returned html
             if(xhr.status === 422){
+                console.log(xhr);
                 var new_html = $.parseHTML(xhr.responseText);
                 this.replace_form(new_html);
                 this.$modal.modal('hide');
