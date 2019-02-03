@@ -121,10 +121,12 @@ class Satellite(BaseModel):
                             # http://rhodesmill.org/pyephem/quick.html under transit, rising, setting:
                             # "Any of the tuple values can be None if that event was not found."
                             o.date = o.epoch = max(np[0], np[2], np[4])
+                            break
 
                     except ValueError:
                         o.date = o.epoch = date_limit
                         # TODO: handle geosynchronous satellites (no trajectories calculated)
+                        break
 
     def save(self, *args, **kwargs):
         newsat = False
