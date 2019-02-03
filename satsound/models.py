@@ -56,6 +56,7 @@ class Satellite(BaseModel):
         self.tle = '\n'.join(tle)
 
     def update_trajectories(self):
+        logger.info('update_trajectories: %s' % self.norad_id)
         if self.tle != '':
             self.satellitetrajectory_set.all().delete()
 
@@ -109,6 +110,7 @@ class Satellite(BaseModel):
                             except AssertionError:  # If we get trapped in a loop, bail
                                 logger.error('Repeated trajectory. Discarding %s and bailing.' % (np,))
                                 o.date = o.epoch = date_limit
+                                break
 
                         except AssertionError:
                             # uncomment next line if we want to dig into why we're getting None for events

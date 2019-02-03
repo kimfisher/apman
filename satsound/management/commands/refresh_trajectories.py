@@ -47,3 +47,5 @@ class Command(BaseCommand):
                         # self.stdout.write('%s does not exist' % norad_id)
 
                     tle = None
+
+        logger.info('refresh_trajectories finished')
